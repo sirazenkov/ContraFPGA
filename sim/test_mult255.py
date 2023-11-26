@@ -11,7 +11,7 @@ from cocotb.clock import Clock
 from cocotb.runner import get_runner
 from cocotb.triggers import Timer, FallingEdge
 
-rtl_dir = os.path.abspath(os.path.join('..', 'rtl'))
+rtl_dir = os.path.abspath(os.path.join(os.path.dirname(__file__),'..', 'rtl'))
 
 @cocotb.test()
 async def mult255_tb(dut):
