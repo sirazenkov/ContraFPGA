@@ -1,0 +1,8 @@
+# Simulation
+__pycache__/
+sim_build/
+
+# Gowin flow
+impl/
+contra.gprj.user
+

@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Nov 26 09:57:15 2023
+[*]
+[dumpfile] "/mnt/c/Users/semen/Documents/CS/MyProjects/ContraFPGA/sim/sim_build/divider_wave.vcd"
+[dumpfile_mtime] "Sun Nov 26 09:54:44 2023"
+[dumpfile_size] 1556
+[savefile] "/mnt/c/Users/semen/Documents/CS/MyProjects/ContraFPGA/sim/waves/divider.gtkw"
+[timestart] 0
+[size] 1908 987
+[pos] -775 -226
+*-18.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 214
+[signals_width] 150
+[sst_expanded] 1
+[sst_vpaned_height] 288
+@28
+divider.irst_n
+divider.iclk
+@22
+divider.idividend[15:0]
+divider.idivisor[7:0]
+divider.oquotient[7:0]
+[pattern_trace] 1
+[pattern_trace] 0

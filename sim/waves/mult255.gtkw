@@ -1,0 +1,24 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Sun Nov 26 09:33:13 2023
+[*]
+[dumpfile] "/mnt/c/Users/semen/Documents/CS/MyProjects/ContraFPGA/sim/sim_build/mult255_wave.vcd"
+[dumpfile_mtime] "Sun Nov 26 09:30:59 2023"
+[dumpfile_size] 415
+[savefile] "/mnt/c/Users/semen/Documents/CS/MyProjects/ContraFPGA/sim/add_waves/mult255.gtkw"
+[timestart] 0
+[size] 1908 987
+[pos] -298 -91
+*-15.000000 0 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 214
+[signals_width] 86
+[sst_expanded] 1
+[sst_vpaned_height] 288
+@28
+mult255.irst_n
+mult255.iclk
+@22
+mult255.x[7:0]
+mult255.q[15:0]
+[pattern_trace] 1
+[pattern_trace] 0
