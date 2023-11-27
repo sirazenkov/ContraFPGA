@@ -1,6 +1,8 @@
 
-module contra #(
-   parameter POLARITY = 1
+module stretch #(
+   parameter SRC_POLARITY = 1,
+   parameter DST_POLARITY = 1,
+   parameter BUF_TYPE     = "ASYNC"
 )(
    input        isrc_rst_n,
    input        isrc_clk,
@@ -21,23 +23,19 @@ module contra #(
    output       odst_de
 );
 
-   `ifdef COCOTB_SIM
-    initial begin
-      $dumpfile("contra_wave.vcd");
-      $dumpvars(0, contra);
-      #1;
-    end
-  `endif
-
    localparam PIPELINE_LEN = 10;
 
    reg  src_vs_reg;
    wire src_vs_strobe;
 
-   reg [7:0] min_int, max_int;
-   reg [7:0] range;
+   reg  [7:0] min_int, max_int;
 
-   reg [7:0] used_min_int, used_max_int;
+   wire [15:0] intensity, used_intensity;
+   wire [7:0] used_min_int, used_max_int;
+   wire [7:0] range;
+
+   reg  dst_vs_reg;
+   wire dst_vs_strobe;
 
    reg  [7:0]  dst_data_norm;
    wire [15:0] dst_data_mult;
@@ -51,7 +49,7 @@ module contra #(
       if (!isrc_rst_n) src_vs_reg <= 1'b0;
       else             src_vs_reg <= isrc_vs;
    end
-   assign src_vs_strobe = (src_vs_reg != POLARITY) && (isrc_vs == POLARITY);
+   assign src_vs_strobe = (src_vs_reg != SRC_POLARITY) && (isrc_vs == SRC_POLARITY);
 
    always @ (posedge isrc_clk or negedge isrc_rst_n) begin
       if (!isrc_rst_n) begin
@@ -66,17 +64,47 @@ module contra #(
       end
    end
 
-   always @ (posedge isrc_clk or negedge isrc_rst_n) begin
-      if (!isrc_rst_n) begin
-         range        <= 8'd0;
-         used_min_int <= 8'd0;
-         used_max_int <= 8'd0;
-      end else if (src_vs_strobe) begin
-         range        <= max_int - min_int;
-         used_min_int <= min_int;
-         used_max_int <= max_int;
-      end
+   always @ (posedge isrc_clk or negedge idst_rst_n) begin
+      if (!idst_rst_n) dst_vs_reg <= 1'b0;
+      else             dst_vs_reg <= idst_vs;
    end
+   assign dst_vs_strobe = (dst_vs_reg != DST_POLARITY) && (idst_vs == DST_POLARITY);
+
+   assign intensity = {max_int, min_int};
+
+   generate
+      if (BUF_TYPE == "BIN")
+         bin_buf #(
+            .DATA_WIDTH(16)
+         ) bin_buf_inst (
+            .irst_n(isrc_rst_n),
+            .iclk  (isrc_clk),
+
+            .idata (intensity),
+            .iwr   (src_vs_strobe),
+
+            .odata (used_intensity)
+         );
+      else
+         async_buf #(
+            .DATA_WIDTH(16),
+            .DEPTH     ( 3)
+         ) async_buf_inst (
+            .isrc_rst_n(isrc_rst_n),
+            .isrc_clk  (isrc_clk),
+
+            .isrc_data (intensity),
+            .isrc_wr   (src_vs_strobe),
+
+            .idst_rst_n(idst_rst_n),
+            .idst_clk  (idst_clk),
+            .idst_rd   (dst_vs_strobe),
+            .odst_data (used_intensity)
+         );
+   endgenerate
+   assign used_max_int = used_intensity[15:8];
+   assign used_min_int = used_intensity[7:0];
+   assign range = used_max_int - used_min_int;
 
    always @ (posedge idst_clk or negedge idst_rst_n) begin
       if (!idst_rst_n)

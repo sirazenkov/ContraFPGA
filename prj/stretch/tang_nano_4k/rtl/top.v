@@ -82,10 +82,10 @@ module top (
   wire       rgb_de_raw;
   wire [7:0] intensity_data_raw;
 
-  wire       rgb_vs_contra;
-  wire       rgb_hs_contra;
-  wire       rgb_de_contra;
-  wire [7:0] intensity_data_contra;
+  wire       rgb_vs_stretch;
+  wire       rgb_hs_stretch;
+  wire       rgb_de_stretch;
+  wire [7:0] intensity_data_stretch;
 
   wire       rgb_vs;
   wire       rgb_hs;
@@ -122,24 +122,24 @@ module top (
 
   assign oprocessing = process;
 
-  contra contra_inst (
-    .isrc_rst_n(irst_n               ),
-    .isrc_clk  (ch0_vfb_clk_in       ),
-    .isrc_data (ch0_vfb_data_in[7:0] ),
-    .isrc_vs   (ch0_vfb_vs_in        ),
-    .isrc_de   (ch0_vfb_de_in        ),
+  stretch stretch_inst (
+    .isrc_rst_n(irst_n                ),
+    .isrc_clk  (ch0_vfb_clk_in        ),
+    .isrc_data (ch0_vfb_data_in[7:0]  ),
+    .isrc_vs   (ch0_vfb_vs_in         ),
+    .isrc_de   (ch0_vfb_de_in         ),
 
-    .idst_rst_n(hdmi_rst_n           ),
-    .idst_clk  (pix_clk              ),
-    .idst_data (intensity_data_raw   ),
-    .idst_vs   (rgb_vs_raw           ),
-    .idst_hs   (rgb_hs_raw           ),
-    .idst_de   (rgb_de_raw           ),
+    .idst_rst_n(hdmi_rst_n            ),
+    .idst_clk  (pix_clk               ),
+    .idst_data (intensity_data_raw    ),
+    .idst_vs   (rgb_vs_raw            ),
+    .idst_hs   (rgb_hs_raw            ),
+    .idst_de   (rgb_de_raw            ),
 
-    .odst_data (intensity_data_contra),
-    .odst_vs   (rgb_vs_contra        ),
-    .odst_hs   (rgb_hs_contra        ),
-    .odst_de   (rgb_de_contra        )
+    .odst_data (intensity_data_stretch),
+    .odst_vs   (rgb_vs_stretch        ),
+    .odst_hs   (rgb_hs_stretch        ),
+    .odst_de   (rgb_de_stretch        )
   );
 
 //===================================================
@@ -294,10 +294,10 @@ localparam N = 5; //delay N clocks
   assign rgb_hs_raw         = Pout_hs_dn[4]; // syn_off0_hs;
   assign rgb_de_raw         = Pout_de_dn[4]; // off0_syn_de;
 
-  assign intensity_data = process ? intensity_data_contra : intensity_data_raw;
-  assign rgb_vs         = process ? rgb_vs_contra         : rgb_vs_raw;
-  assign rgb_hs         = process ? rgb_hs_contra         : rgb_hs_raw;
-  assign rgb_de         = process ? rgb_de_contra         : rgb_de_raw;
+  assign intensity_data = process ? intensity_data_stretch : intensity_data_raw;
+  assign rgb_vs         = process ? rgb_vs_stretch         : rgb_vs_raw;
+  assign rgb_hs         = process ? rgb_hs_stretch         : rgb_hs_raw;
+  assign rgb_de         = process ? rgb_de_stretch         : rgb_de_raw;
 
   TMDS_PLLVR TMDS_PLLVR_inst (
     .clkin  (iclk      ), //input clk 
