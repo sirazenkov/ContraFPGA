@@ -42,4 +42,4 @@ set_clock_groups -asynchronous -group [get_clocks {dma_clk}] -group [get_clocks 
 set_clock_groups -asynchronous -group [get_clocks {dma_clk}] -group [get_clocks {pix_clk}]
 set_clock_groups -asynchronous -group [get_clocks {PIXCLK}] -group [get_clocks {pix_clk}]
 
-#set_false_path -from [get_regs {process_s1}]
+set_false_path -from [get_regs {process_s1}]

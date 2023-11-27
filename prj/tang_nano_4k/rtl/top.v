@@ -2,7 +2,8 @@ module top (
   input        iclk, //27Mhz
   input        irst_n,
 
-  //input        iswitch_n,
+  input        iswitch_n,
+  output       oprocessing,
 
   // SCCB interface
   inout        SDA,
@@ -101,7 +102,7 @@ module top (
   wire clk_20M;
 
 //===================================================
-/*
+
   reg switch_reg, switch_strobe;
   reg process;
   
@@ -118,7 +119,9 @@ module top (
     if      (!irst_n)       process <= 1'b0;
     else if (switch_strobe) process <= ~process;
   end
-*/
+
+  assign oprocessing = process;
+
   contra contra_inst (
     .irst_n(irst_n),
 
@@ -290,12 +293,11 @@ localparam N = 5; //delay N clocks
   assign rgb_vs_raw         = Pout_vs_dn[4]; // syn_off0_vs;
   assign rgb_hs_raw         = Pout_hs_dn[4]; // syn_off0_hs;
   assign rgb_de_raw         = Pout_de_dn[4]; // off0_syn_de;
-/*
+
   assign intensity_data = process ? intensity_data_contra : intensity_data_raw;
   assign rgb_vs         = process ? rgb_vs_contra         : rgb_vs_raw;
   assign rgb_hs         = process ? rgb_hs_contra         : rgb_hs_raw;
   assign rgb_de         = process ? rgb_de_contra         : rgb_de_raw;
-*/
 
   TMDS_PLLVR TMDS_PLLVR_inst (
     .clkin  (iclk      ), //input clk 
@@ -318,12 +320,12 @@ localparam N = 5; //delay N clocks
     .I_rst_n      (hdmi_rst_n    ), //asynchronous reset, low active
     .I_serial_clk (serial_clk    ),
     .I_rgb_clk    (pix_clk       ), //pixel clock
-    .I_rgb_vs     (rgb_vs_contra        ), 
-    .I_rgb_hs     (rgb_hs_contra        ),    
-    .I_rgb_de     (rgb_de_contra        ), 
-    .I_rgb_r      (intensity_data_contra),  
-    .I_rgb_g      (intensity_data_contra),  
-    .I_rgb_b      (intensity_data_contra),  
+    .I_rgb_vs     (rgb_vs        ), 
+    .I_rgb_hs     (rgb_hs        ),    
+    .I_rgb_de     (rgb_de        ), 
+    .I_rgb_r      (intensity_data),  
+    .I_rgb_g      (intensity_data),  
+    .I_rgb_b      (intensity_data),  
     .O_tmds_clk_p (O_tmds_clk_p  ),
     .O_tmds_clk_n (O_tmds_clk_n  ),
     .O_tmds_data_p(O_tmds_data_p ), //{r,g,b}
