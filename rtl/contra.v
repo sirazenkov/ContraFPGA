@@ -2,13 +2,13 @@
 module contra #(
    parameter POLARITY = 1
 )(
-   input        irst_n,
-
+   input        isrc_rst_n,
    input        isrc_clk,
    input  [7:0] isrc_data,
    input        isrc_vs,
    input        isrc_de,
 
+   input        idst_rst_n,
    input        idst_clk,
    input  [7:0] idst_data,
    input        idst_vs,
@@ -47,14 +47,14 @@ module contra #(
    reg [PIPELINE_LEN-1:0] dst_hs_pipeline;
    reg [PIPELINE_LEN-1:0] dst_de_pipeline;
 
-   always @ (posedge isrc_clk or negedge irst_n) begin
-      if (!irst_n) src_vs_reg <= 1'b0;
-      else         src_vs_reg <= isrc_vs;
+   always @ (posedge isrc_clk or negedge isrc_rst_n) begin
+      if (!isrc_rst_n) src_vs_reg <= 1'b0;
+      else             src_vs_reg <= isrc_vs;
    end
    assign src_vs_strobe = (src_vs_reg != POLARITY) && (isrc_vs == POLARITY);
 
-   always @ (posedge isrc_clk or negedge irst_n) begin
-      if (!irst_n) begin
+   always @ (posedge isrc_clk or negedge isrc_rst_n) begin
+      if (!isrc_rst_n) begin
          min_int <= 8'd255;
          max_int <= 8'd0;
       end else if (src_vs_strobe) begin
@@ -66,8 +66,8 @@ module contra #(
       end
    end
 
-   always @ (posedge isrc_clk or negedge irst_n) begin
-      if (!irst_n) begin
+   always @ (posedge isrc_clk or negedge isrc_rst_n) begin
+      if (!isrc_rst_n) begin
          range        <= 8'd0;
          used_min_int <= 8'd0;
          used_max_int <= 8'd0;
@@ -78,8 +78,8 @@ module contra #(
       end
    end
 
-   always @ (posedge idst_clk or negedge irst_n) begin
-      if (!irst_n)
+   always @ (posedge idst_clk or negedge idst_rst_n) begin
+      if (!idst_rst_n)
          dst_data_norm <= 8'd0;
       else
          dst_data_norm <= idst_data - used_min_int;
@@ -87,7 +87,7 @@ module contra #(
 
    mult255 mult255_inst (
       .iclk  (idst_clk),
-      .irst_n(irst_n),
+      .irst_n(idst_rst_n),
 
       .x     (dst_data_norm),
       .q     (dst_data_mult)
@@ -95,7 +95,7 @@ module contra #(
 
    divider divider_inst (
       .iclk     (idst_clk),
-      .irst_n   (irst_n),
+      .irst_n   (idst_rst_n),
 
       .idividend(dst_data_mult),
       .idivisor (range),
@@ -103,8 +103,8 @@ module contra #(
       .oquotient(dst_data)
    );
 
-   always @ (posedge isrc_clk or negedge irst_n) begin
-      if (!irst_n) begin
+   always @ (posedge idst_clk or negedge idst_rst_n) begin
+      if (!idst_rst_n) begin
          dst_vs_pipeline <= {PIPELINE_LEN{1'b0}};
          dst_hs_pipeline <= {PIPELINE_LEN{1'b0}};
          dst_de_pipeline <= {PIPELINE_LEN{1'b0}};

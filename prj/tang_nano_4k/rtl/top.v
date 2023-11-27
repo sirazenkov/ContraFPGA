@@ -123,23 +123,23 @@ module top (
   assign oprocessing = process;
 
   contra contra_inst (
-    .irst_n(irst_n),
+    .isrc_rst_n(irst_n               ),
+    .isrc_clk  (ch0_vfb_clk_in       ),
+    .isrc_data (ch0_vfb_data_in[7:0] ),
+    .isrc_vs   (ch0_vfb_vs_in        ),
+    .isrc_de   (ch0_vfb_de_in        ),
 
-    .isrc_clk (ch0_vfb_clk_in       ),
-    .isrc_data(ch0_vfb_data_in[7:0] ),
-    .isrc_vs  (ch0_vfb_vs_in        ),
-    .isrc_de  (ch0_vfb_de_in        ),
+    .idst_rst_n(hdmi_rst_n           ),
+    .idst_clk  (pix_clk              ),
+    .idst_data (intensity_data_raw   ),
+    .idst_vs   (rgb_vs_raw           ),
+    .idst_hs   (rgb_hs_raw           ),
+    .idst_de   (rgb_de_raw           ),
 
-    .idst_clk (pix_clk              ),
-    .idst_data(intensity_data_raw   ),
-    .idst_vs  (rgb_vs_raw           ),
-    .idst_hs  (rgb_hs_raw           ),
-    .idst_de  (rgb_de_raw           ),
-
-    .odst_data(intensity_data_contra),
-    .odst_vs  (rgb_vs_contra        ),
-    .odst_hs  (rgb_hs_contra        ),
-    .odst_de  (rgb_de_contra        )
+    .odst_data (intensity_data_contra),
+    .odst_vs   (rgb_vs_contra        ),
+    .odst_hs   (rgb_hs_contra        ),
+    .odst_de   (rgb_de_contra        )
   );
 
 //===================================================
