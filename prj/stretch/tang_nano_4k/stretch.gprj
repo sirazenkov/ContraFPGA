@@ -15,11 +15,10 @@
         <File path="rtl/OV2640_Registers.v" type="file.verilog" enable="1"/>
         <File path="rtl/syn_gen.v" type="file.verilog" enable="1"/>
         <File path="rtl/top.v" type="file.verilog" enable="1"/>
-        <File path="src/video_frame_buffer/video_frame_buffer.v" type="file.verilog" enable="1"/>
-	<File path="../../rtl/async_buf.v" type="file.verilog" enable="1"/>
-	<File path="../../rtl/divider.v" type="file.verilog" enable="1"/>
-	<File path="../../rtl/mult255.v" type="file.verilog" enable="1"/>
-	<File path="../../rtl/stretch.v" type="file.verilog" enable="1"/>
+	    <File path="../../../rtl/async_buf.v" type="file.verilog" enable="1"/>
+	    <File path="../../../rtl/divider.v" type="file.verilog" enable="1"/>
+	    <File path="../../../rtl/mult255.v" type="file.verilog" enable="1"/>
+	    <File path="../../../rtl/stretch.v" type="file.verilog" enable="1"/>
         <File path="constr/physical.cst" type="file.cst" enable="1"/>
         <File path="constr/timing.sdc" type="file.sdc" enable="1"/>
     </FileList>
